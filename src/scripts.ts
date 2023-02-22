@@ -1,5 +1,5 @@
 // Image amount
-let cardAmout = 5;
+let cardAmount = 5;
 
 class ImagesGallery {
     i: number;
@@ -10,7 +10,7 @@ class ImagesGallery {
         this.i = i;
 
         // Generate all cards
-        for (let i = 1; i <= cardAmout - 2; i++) {
+        for (let i = 1; i <= cardAmount - 2; i++) {
             this.makeCard(i);
         }
 
@@ -73,10 +73,6 @@ class ImagesGallery {
             circles[i].className = circles[i].className.replace('active', '');
         }
         slides[this.sIndex - 1].style.display = 'block';
-
-        // timed gallery event
-        clearTimeout(this.timer);
-        this.timer = setTimeout(() => this.nextSlide(1), 10000);
     }
 }
 
@@ -84,13 +80,13 @@ class AddRoundButtons extends ImagesGallery {
     i: number;
 
     constructor(i: number) {
-        super(cardAmout);
+        super(cardAmount);
         // Generate all circle buttons
-        for (let i = 1; i <= cardAmout - 2; i++) {
+        for (let i = 1; i <= cardAmount - 2; i++) {
             this.circleButton(i);
         }
         // Add circle button events
-        for (let i = 1; i <= cardAmout - 2; i++) {
+        for (let i = 1; i <= cardAmount - 2; i++) {
             this.circleButtonEvent(`.circle${i}`, i);
         }
     }
@@ -115,17 +111,24 @@ class AddRoundButtons extends ImagesGallery {
     };
 }
 
-class Thumbnails extends ImagesGallery {
+class Thumbnails extends AddRoundButtons {
     i: number;
     constructor(i: number) {
-        super(cardAmout);
+        super(cardAmount);
+
+        // add two cards
+        for (i = 4; i <= 5; i++) {
+            this.makeCard(i);
+            this.circleButton(i);
+            this.circleButtonEvent(`.circle${i}`, i);
+        }
 
         // Generate all thumbnail images
-        for (let i = 1; i <= cardAmout; i++) {
+        for (let i = 1; i <= cardAmount; i++) {
             this.makeThumbnails(i);
         }
         // Generate thumbnail events
-        for (let i = 1; i <= cardAmout; i++) {
+        for (let i = 1; i <= cardAmount; i++) {
             this.ThumbnailsImagesEvent(`.thumbnail${i}`, i);
         }
     }
@@ -153,18 +156,18 @@ class Thumbnails extends ImagesGallery {
     };
 }
 
-class FullScreen extends ImagesGallery {
+class FullScreen extends Thumbnails {
     i: number;
     constructor(i: number) {
-        super(cardAmout);
+        super(cardAmount);
 
         // Create fullscreen events
-        for (let i = 1; i <= cardAmout; i++) {
+        for (let i = 1; i <= cardAmount; i++) {
             this.fullScreen(i);
         }
 
         // add pointer over slides
-        for (let i = 1; i <= cardAmout; i++) {
+        for (let i = 1; i <= cardAmount; i++) {
             document.getElementById(`car${i}`).style.cursor = 'pointer';
         }
     }
@@ -186,22 +189,29 @@ class FullScreen extends ImagesGallery {
             }
         });
     };
+
+    // Extend Parrent class method
+    slidesLogic(n: number) {
+        super.slidesLogic(n);
+
+        // timed gallery event
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => this.nextSlide(1), 10000);
+    }
 }
 
-// images and two arrows
-const cleanGallery = new ImagesGallery(cardAmout);
-// add circle buttons
-// const addRbuttons = new AddRoundButtons(cardAmout);
+// ++++++++++++++++++++++++++++++++++++++++++
+//                 OBJECTS
+// ++++++++++++++++++++++++++++++++++++++++++
 
-// // add thumbnails
-// cleanGallery.makeCard(4);
-// cleanGallery.makeCard(5);
-// addRbuttons.circleButton(4);
-// addRbuttons.circleButton(5);
-// addRbuttons.circleButtonEvent(`.circle4`, 4);
-// addRbuttons.circleButtonEvent(`.circle5`, 5);
+// 3 slides with arrows
+// const cleanGallery = new ImagesGallery(cardAmount);
 
-// const addThumbs = new Thumbnails(cardAmout);
+// 3 slides with round buttons
+// const addRoundButtons = new AddRoundButtons(cardAmount);
 
-// add fullscreen and timer
-// const addFullsScreen = new FullScreen(cardAmout);
+// 5 slides with round buttons and thumbnails
+// const addThumbs = new Thumbnails(cardAmount);
+
+// everything with fullscreen and timed image change
+const addFullsScreen = new FullScreen(cardAmount);
